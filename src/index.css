@@ -243,6 +243,10 @@ body {
   gap: 0.85rem;
 }
 
+.play-screen {
+  position: relative;
+}
+
 h1 {
   margin: 0;
   font-size: clamp(1.6rem, 5vw, 2.4rem);
@@ -384,6 +388,110 @@ h1 {
 .digit-pad button[aria-pressed="true"] {
   background: var(--pad-selected);
   box-shadow: inset 0 0 0 2px var(--petal);
+}
+
+.name-prompt {
+  position: absolute;
+  inset: 3.5rem 0 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  border-radius: 16px;
+}
+
+.name-prompt-title,
+.name-prompt-high,
+.name-prompt-time {
+  margin: 0;
+  text-align: center;
+}
+
+.name-prompt-title {
+  color: var(--petal);
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.name-prompt-high {
+  color: var(--blossom-center);
+  font-weight: 650;
+}
+
+.name-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: min(100%, 18rem);
+}
+
+.name-label {
+  color: var(--muted);
+}
+
+.name-form input {
+  min-height: 56px;
+  border-radius: 12px;
+  border: 1px solid var(--btn-border);
+  background: var(--cell);
+  color: var(--ink);
+  font-size: 1.05rem;
+  padding: 0 0.9rem;
+}
+
+.name-form button {
+  min-height: 56px;
+  border-radius: 999px;
+  border: 1px solid var(--btn-border);
+  background: var(--btn);
+  color: var(--ink);
+  font-size: 1.05rem;
+}
+
+.lb-section {
+  width: 100%;
+}
+
+.lb-section h2 {
+  margin: 0.75rem 0 0.35rem;
+  color: var(--petal);
+  font-size: 1.05rem;
+}
+
+.lb-empty {
+  margin: 0 0 0.5rem;
+  color: var(--muted);
+}
+
+.lb-list {
+  margin: 0 0 0.5rem;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.lb-list li {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.55rem 0.85rem;
+  border-radius: 12px;
+  border: 1px solid var(--btn-border);
+  background: var(--btn);
+  color: var(--ink);
+}
+
+.lb-name {
+  font-weight: 650;
+}
+
+.lb-time {
+  color: var(--petal);
 }
 
 @media (max-width: 420px) {

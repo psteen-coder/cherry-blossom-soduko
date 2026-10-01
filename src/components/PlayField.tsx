@@ -1,17 +1,43 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { SudokuGame } from "../sudoku/kernel";
 import { formatElapsed, PlaySession } from "../sudoku/play";
+import {
+  defaultScoreStore,
+  isHighScore,
+  lastUsedName,
+  recordScore,
+  type ScoreStore,
+} from "../sudoku/scores";
 
 type Props = {
   game: SudokuGame;
   onMenu: () => void;
   onChange?: (game: SudokuGame) => void;
+  scoreStore?: ScoreStore | null;
 };
 
-export default function PlayField({ game, onMenu, onChange }: Props) {
+export default function PlayField({
+  game,
+  onMenu,
+  onChange,
+  scoreStore,
+}: Props) {
+  const store = scoreStore === undefined ? defaultScoreStore() : scoreStore;
   const session = useMemo(() => new PlaySession(game), [game]);
   const [, setRev] = useState(0);
   const bump = () => setRev((n) => n + 1);
+  const won = game.isComplete();
+  const [name, setName] = useState(() => lastUsedName(store));
+  const [saved, setSaved] = useState(false);
+  const highRef = useRef<boolean | null>(null);
+  if (won && highRef.current === null) {
+    highRef.current = isHighScore(
+      store,
+      game.difficulty,
+      game.elapsedSeconds(),
+    );
+  }
+  const high = highRef.current === true;
 
   useEffect(() => {
     const id = window.setInterval(bump, 1000);
@@ -99,6 +125,52 @@ export default function PlayField({ game, onMenu, onChange }: Props) {
           Erase
         </button>
       </div>
+      {won ? (
+        <div className="name-prompt" data-testid="name-prompt">
+          <p className="name-prompt-title">You solved it</p>
+          {high ? (
+            <p className="name-prompt-high" data-testid="new-high-score">
+              New high score
+            </p>
+          ) : null}
+          <p className="name-prompt-time" data-testid="win-time">
+            {formatElapsed(game.elapsedSeconds())}
+          </p>
+          {saved ? (
+            <p className="tagline">Saved to the leaderboard.</p>
+          ) : (
+            <form
+              className="name-form"
+              onSubmit={(event) => {
+                event.preventDefault();
+                const trimmed = name.trim() || lastUsedName(store) || "Player";
+                recordScore(store, {
+                  name: trimmed,
+                  difficulty: game.difficulty,
+                  timeSeconds: game.elapsedSeconds(),
+                  at: Date.now(),
+                });
+                setName(trimmed);
+                setSaved(true);
+              }}
+            >
+              <label className="name-label" htmlFor="score-name">
+                Name
+              </label>
+              <input
+                id="score-name"
+                data-testid="score-name"
+                value={name}
+                autoComplete="nickname"
+                onChange={(event) => setName(event.target.value)}
+              />
+              <button type="submit" data-testid="score-save">
+                Save
+              </button>
+            </form>
+          )}
+        </div>
+      ) : null}
     </section>
   );
 }

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import BlossomBorder from "./components/BlossomBorder";
 import MainMenu, { DifficultyPicker } from "./components/MainMenu";
+import Leaderboard from "./components/Leaderboard";
 import PlayField from "./components/PlayField";
 import Settings from "./components/Settings";
 import {
@@ -15,6 +16,10 @@ import {
   restoreGame,
   type SaveStore,
 } from "./sudoku/save";
+import {
+  defaultScoreStore,
+  type ScoreStore,
+} from "./sudoku/scores";
 import {
   applyTheme,
   defaultThemeStore,
@@ -34,6 +39,7 @@ export type Screen =
 export type AppProps = {
   saveStore?: SaveStore | null;
   themeStore?: ThemeStore | null;
+  scoreStore?: ScoreStore | null;
   screen?: Screen;
   seed?: number;
   difficulty?: Difficulty;
@@ -42,12 +48,14 @@ export type AppProps = {
 export default function App({
   saveStore,
   themeStore,
+  scoreStore,
   screen: initialScreen = "menu",
   seed,
   difficulty: initialDifficulty = "easy",
 }: AppProps) {
   const store = saveStore === undefined ? defaultSaveStore() : saveStore;
   const tStore = themeStore === undefined ? defaultThemeStore() : themeStore;
+  const sStore = scoreStore === undefined ? defaultScoreStore() : scoreStore;
   const [theme, setTheme] = useState<ThemeId>(() => {
     const id = readTheme(tStore);
     applyTheme(id);
@@ -115,6 +123,7 @@ export default function App({
         {screen === "play" && game ? (
           <PlayField
             game={game}
+            scoreStore={sStore}
             onChange={(next) => {
               persistGame(store, next);
               refreshContinue();
@@ -138,38 +147,9 @@ export default function App({
           />
         ) : null}
         {screen === "leaderboard" ? (
-          <StubScreen
-            title="Leaderboard"
-            testId="leaderboard-screen"
-            body="Times land in a later ticket."
-            onBack={() => setScreen("menu")}
-          />
+          <Leaderboard store={sStore} onBack={() => setScreen("menu")} />
         ) : null}
       </main>
     </div>
-  );
-}
-
-function StubScreen({
-  title,
-  testId,
-  body,
-  onBack,
-}: {
-  title: string;
-  testId: string;
-  body: string;
-  onBack: () => void;
-}) {
-  return (
-    <section className="menu-screen" data-testid={testId}>
-      <h1>{title}</h1>
-      <p className="tagline">{body}</p>
-      <nav className="menu" aria-label={title}>
-        <button type="button" data-testid={`${testId}-back`} onClick={onBack}>
-          Back
-        </button>
-      </nav>
-    </section>
   );
 }
