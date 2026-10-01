@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { listenAndroidBack } from "./androidBack";
 import BlossomBorder from "./components/BlossomBorder";
 import MainMenu, { DifficultyPicker } from "./components/MainMenu";
 import Leaderboard from "./components/Leaderboard";
@@ -67,10 +68,31 @@ export default function App({
     if (initialScreen !== "play") return null;
     return SudokuGame.generate(initialDifficulty, seed ?? 11);
   });
+  const screenRef = useRef(screen);
+  screenRef.current = screen;
+  const gameRef = useRef(game);
+  gameRef.current = game;
 
   function refreshContinue(): void {
     setCanContinue(hasInProgressSave(store));
   }
+
+  function goToMenu(): void {
+    const current = gameRef.current;
+    if (current?.hasStarted()) persistGame(store, current);
+    refreshContinue();
+    setScreen("menu");
+  }
+
+  useEffect(() => {
+    let remove: (() => void) | undefined;
+    void listenAndroidBack(() => screenRef.current, goToMenu).then((fn) => {
+      remove = fn;
+    });
+    return () => {
+      remove?.();
+    };
+  }, [store]);
 
   function startGame(difficulty: Difficulty) {
     const nextSeed = seed ?? (Date.now() >>> 0);
@@ -128,11 +150,7 @@ export default function App({
               persistGame(store, next);
               refreshContinue();
             }}
-            onMenu={() => {
-              if (game.hasStarted()) persistGame(store, game);
-              refreshContinue();
-              setScreen("menu");
-            }}
+            onMenu={goToMenu}
             onLeaderboard={() => {
               refreshContinue();
               setScreen("leaderboard");

@@ -32,7 +32,7 @@ Then open http://127.0.0.1:5173.
 
 ## Stack
 
-Vite + React + TypeScript. Capacitor Android later (`org.cherryblossomsoduko.game`).
+Vite + React + TypeScript. Capacitor Android `org.cherryblossomsoduko.game`.
 
 ## Tests (PowerShell)
 
@@ -85,8 +85,31 @@ npm run test:e2e
 
 ## Android APK (Windows)
 
-Later in this bolt. Debug APK only. No Play Store / AAB in this wave.
+Debug APK only. Sideload. No Play Store / AAB in this wave. Package `org.cherryblossomsoduko.game` 0.1.0, arm64-v8a, portrait.
 
-```powershell
-powershell -ExecutionPolicy Bypass -File .\scripts\build-apk.ps1
-```
+1. Open **PowerShell** (not Git Bash, not cmd).
+2. `cd` to the **repo root** (the folder that contains `package.json` and `scripts`). GitHub zip extracts to:
+
+   ```powershell
+   cd "$env:USERPROFILE\Downloads\cherry-blossom-soduko-main\cherry-blossom-soduko"
+   ```
+
+3. Needs Node 22+, JDK 21, and Android SDK (`ANDROID_HOME`). Then:
+
+   ```powershell
+   powershell -ExecutionPolicy Bypass -File .\scripts\build-apk.ps1
+   ```
+
+4. APK path (after a successful local build):
+
+   ```
+   android\app\build\outputs\apk\debug\app-debug.apk
+   ```
+
+The script builds the Vite bundle, runs `npx cap sync android`, then `gradlew.bat assembleDebug`.
+
+GitHub Actions: **Actions → Android debug APK → Run workflow** (`workflow_dispatch`). Artifact name `CherryBlossomSoduko.apk`. Also runs on push to `main` and `bolt/**`.
+
+Capacitor WebView loads `https://localhost`, so `android.permission.INTERNET` stays in the manifest. The game itself makes no network calls. Device/redroid smoke is a later ticket.
+
+Hardware back on play/settings/leaderboard/difficulty returns to the main menu and leaves Continue intact when a game is in progress. Digit pad then cell is tap-only (no hover).
