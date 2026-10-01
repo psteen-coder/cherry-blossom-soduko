@@ -18,6 +18,15 @@ export type PlaceResult =
 
 export type Clock = () => number;
 
+export type GameSnapshot = {
+  difficulty: Difficulty;
+  seed: number;
+  elapsedSeconds: number;
+  puzzle: number[][];
+  values: number[][];
+  solution: number[][];
+};
+
 const SIZE = 9;
 const FULL_MASK = 0x1ff;
 const BOX_OF = (row: number, col: number): number =>
@@ -439,6 +448,69 @@ export class SudokuGame {
   elapsedSeconds(): number {
     if (this.startedAtMs === null) return 0;
     return Math.max(0, Math.floor((this.now() - this.startedAtMs) / 1000));
+  }
+
+  hasStarted(): boolean {
+    return this.startedAtMs !== null;
+  }
+
+  snapshot(): GameSnapshot {
+    const puzzle = emptyGrid();
+    const values = emptyGrid();
+    for (let r = 0; r < SIZE; r++) {
+      for (let c = 0; c < SIZE; c++) {
+        const cell = this.cells[r][c];
+        if (cell.given && cell.value !== null) puzzle[r][c] = cell.value;
+        if (cell.value !== null) values[r][c] = cell.value;
+      }
+    }
+    return {
+      difficulty: this.difficulty,
+      seed: this.seed,
+      elapsedSeconds: this.elapsedSeconds(),
+      puzzle,
+      values,
+      solution: copyGrid(this.solution),
+    };
+  }
+
+  static restore(
+    snap: GameSnapshot,
+    opts?: { now?: Clock },
+  ): SudokuGame {
+    if (!(snap.difficulty in CLUE_COUNTS)) {
+      throw new Error(`Unknown difficulty: ${String(snap.difficulty)}`);
+    }
+    const game = new SudokuGame(
+      snap.difficulty,
+      snap.seed >>> 0,
+      snap.puzzle,
+      snap.solution,
+      opts?.now ?? Date.now,
+    );
+    for (let r = 0; r < SIZE; r++) {
+      for (let c = 0; c < SIZE; c++) {
+        if (game.cells[r][c].given) continue;
+        const value = snap.values?.[r]?.[c] ?? 0;
+        game.cells[r][c].value = value === 0 ? null : value;
+      }
+    }
+    game.recomputeConflicts();
+    const elapsed = Math.max(0, Math.floor(snap.elapsedSeconds || 0));
+    let hasEntry = elapsed > 0;
+    if (!hasEntry) {
+      for (let r = 0; r < SIZE; r++) {
+        for (let c = 0; c < SIZE; c++) {
+          if (!game.cells[r][c].given && game.cells[r][c].value !== null) {
+            hasEntry = true;
+            break;
+          }
+        }
+        if (hasEntry) break;
+      }
+    }
+    game.startedAtMs = hasEntry ? game.now() - elapsed * 1000 : null;
+    return game;
   }
 
   private recomputeConflicts(): void {

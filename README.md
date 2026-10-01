@@ -72,7 +72,8 @@ npm run build
 
 - Title: **Cherry Blossom Soduko** (not a Vite starter page)
 - Opens on the **main menu** with cherry-blossom SVG borders (not the board)
-- Menu: New Game → Easy / Medium / Hard, Continue (disabled if none), Settings, Leaderboard
+- Menu: New Game → Easy / Medium / Hard, Continue (disabled if none; restores board, givens, entries, difficulty, and timer), Settings, Leaderboard
+- Autosave key `cherry-blossom-soduko:save` on every place/clear; New Game or a win disables Continue until the next place
 - Play: select a digit 1–9 at the bottom, then tap a cell to place it
 - Difficulties: Easy 40 clues / Medium 30 / Hard 22 (unique solutions)
 - Themes: Dark, Light, Sakura, Sage, Lavender, Peach

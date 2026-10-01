@@ -5,9 +5,10 @@ import { formatElapsed, PlaySession } from "../sudoku/play";
 type Props = {
   game: SudokuGame;
   onMenu: () => void;
+  onChange?: (game: SudokuGame) => void;
 };
 
-export default function PlayField({ game, onMenu }: Props) {
+export default function PlayField({ game, onMenu, onChange }: Props) {
   const session = useMemo(() => new PlaySession(game), [game]);
   const [, setRev] = useState(0);
   const bump = () => setRev((n) => n + 1);
@@ -42,8 +43,9 @@ export default function PlayField({ game, onMenu }: Props) {
           data-conflict={cell.conflict ? "true" : "false"}
           aria-label={`Row ${row + 1} column ${col + 1}${cell.value ? `, ${cell.value}` : ", empty"}`}
           onClick={() => {
-            session.tapCell(row, col);
+            const result = session.tapCell(row, col);
             bump();
+            if (result.ok) onChange?.(game);
           }}
         >
           {cell.value ?? ""}

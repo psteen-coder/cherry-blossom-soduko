@@ -21,12 +21,14 @@ test("selecting 5 then tapping an empty cell writes 5", async ({ page }) => {
   await page.getByTestId("diff-easy").click();
   await expect(page.getByTestId("play-field")).toBeVisible({ timeout: 30000 });
   await page.getByTestId("pad-5").click();
+  await expect(page.getByTestId("pad-5")).toHaveAttribute("aria-pressed", "true");
   const empty = page
     .locator('[data-testid^="cell-"][data-given="false"]')
     .filter({ hasText: /^$/ })
     .first();
-  await empty.click();
-  await expect(empty).toHaveText("5");
+  const cellId = await empty.getAttribute("data-testid");
+  await page.getByTestId(cellId!).click();
+  await expect(page.getByTestId(cellId!)).toHaveText("5");
 });
 
 test("tapping a given cell does not change it", async ({ page }) => {
@@ -48,15 +50,17 @@ test("erase clears a player cell, not a given", async ({ page }) => {
   await page.getByTestId("diff-easy").click();
   await expect(page.getByTestId("play-field")).toBeVisible({ timeout: 30000 });
   await page.getByTestId("pad-5").click();
+  await expect(page.getByTestId("pad-5")).toHaveAttribute("aria-pressed", "true");
   const empty = page
     .locator('[data-testid^="cell-"][data-given="false"]')
     .filter({ hasText: /^$/ })
     .first();
-  await empty.click();
-  await expect(empty).toHaveText("5");
+  const cellId = await empty.getAttribute("data-testid");
+  await page.getByTestId(cellId!).click();
+  await expect(page.getByTestId(cellId!)).toHaveText("5");
   await page.getByTestId("pad-erase").click();
-  await empty.click();
-  await expect(empty).toHaveText("");
+  await page.getByTestId(cellId!).click();
+  await expect(page.getByTestId(cellId!)).toHaveText("");
   const given = page.locator('[data-testid^="cell-"][data-given="true"]').first();
   const before = (await given.textContent()) ?? "";
   await given.click();

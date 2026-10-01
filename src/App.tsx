@@ -7,9 +7,11 @@ import {
   type Difficulty,
 } from "./sudoku/kernel";
 import {
+  clearInProgressSave,
   defaultSaveStore,
   hasInProgressSave,
-  writeInProgressSave,
+  persistGame,
+  restoreGame,
   type SaveStore,
 } from "./sudoku/save";
 
@@ -41,12 +43,18 @@ export default function App({
     return SudokuGame.generate(initialDifficulty, seed ?? 11);
   });
 
+  function refreshContinue(): void {
+    setCanContinue(hasInProgressSave(store));
+  }
+
   function startGame(difficulty: Difficulty) {
     const nextSeed = seed ?? (Date.now() >>> 0);
     let lastError: unknown;
     for (let offset = 0; offset < 16; offset++) {
       try {
         const next = SudokuGame.generate(difficulty, (nextSeed + offset) >>> 0);
+        clearInProgressSave(store);
+        refreshContinue();
         setGame(next);
         setScreen("play");
         return;
@@ -66,9 +74,16 @@ export default function App({
         {screen === "menu" ? (
           <MainMenu
             canContinue={canContinue}
-            onNewGame={() => setScreen("difficulty")}
+            onNewGame={() => {
+              clearInProgressSave(store);
+              refreshContinue();
+              setScreen("difficulty");
+            }}
             onContinue={() => {
-              if (canContinue && game) setScreen("play");
+              const restored = restoreGame(store);
+              if (!restored) return;
+              setGame(restored);
+              setScreen("play");
             }}
             onSettings={() => setScreen("settings")}
             onLeaderboard={() => setScreen("leaderboard")}
@@ -83,9 +98,13 @@ export default function App({
         {screen === "play" && game ? (
           <PlayField
             game={game}
+            onChange={(next) => {
+              persistGame(store, next);
+              refreshContinue();
+            }}
             onMenu={() => {
-              writeInProgressSave(store, game);
-              setCanContinue(hasInProgressSave(store));
+              if (game.hasStarted()) persistGame(store, game);
+              refreshContinue();
               setScreen("menu");
             }}
           />
