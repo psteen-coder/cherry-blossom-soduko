@@ -14,6 +14,10 @@ if (-not (Test-Path "node_modules")) {
   npm install
 }
 
+Write-Host "npm test"
+npm test
+if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
 Write-Host "npm run build"
 npm run build
 if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }

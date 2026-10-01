@@ -43,7 +43,7 @@ Vite + React + TypeScript. Capacitor Android later (`org.cherryblossomsoduko.gam
    cd "$env:USERPROFILE\Downloads\cherry-blossom-soduko-main\cherry-blossom-soduko"
    ```
 
-3. Run the scaffold check (production build + title):
+3. Run kernel tests then the production build:
 
    ```powershell
    powershell -ExecutionPolicy Bypass -File .\scripts\run-tests.ps1
@@ -53,16 +53,18 @@ Vite + React + TypeScript. Capacitor Android later (`org.cherryblossomsoduko.gam
 
    ```powershell
    npm install
+   npm test
    npm run build
    ```
 
-The built `dist/index.html` title must be **Cherry Blossom Soduko**, not Vite.
+`npm test` is Vitest (Sudoku kernel). The built `dist/index.html` title must be **Cherry Blossom Soduko**, not Vite.
 
 ## Linux / macOS tests
 
 ```bash
 cd /path/to/cherry-blossom-soduko
 npm install
+npm test
 npm run build
 ```
 
