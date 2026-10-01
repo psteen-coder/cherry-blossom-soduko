@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { SAVE_KEY, hasInProgressSave, type SaveStore } from "./save";
+import { SudokuGame } from "./kernel";
+import {
+  SAVE_KEY,
+  hasInProgressSave,
+  writeInProgressSave,
+  type SaveStore,
+} from "./save";
 
 function memoryStore(initial: Record<string, string> = {}): SaveStore {
   const data = { ...initial };
@@ -45,5 +51,19 @@ describe("hasInProgressSave", () => {
         memoryStore({ [SAVE_KEY]: JSON.stringify({ status: "playing" }) }),
       ),
     ).toBe(true);
+  });
+});
+
+describe("writeInProgressSave", () => {
+  it("writes a playing snapshot so Continue can enable", () => {
+    const store = memoryStore();
+    const game = SudokuGame.generate("easy", 11);
+    writeInProgressSave(store, game);
+    expect(hasInProgressSave(store)).toBe(true);
+    const raw = store.getItem(SAVE_KEY);
+    expect(raw).toBeTruthy();
+    const data = JSON.parse(raw!) as { status: string; difficulty: string };
+    expect(data.status).toBe("playing");
+    expect(data.difficulty).toBe("easy");
   });
 });

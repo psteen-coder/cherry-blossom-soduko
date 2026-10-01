@@ -9,6 +9,7 @@ import {
 import {
   defaultSaveStore,
   hasInProgressSave,
+  writeInProgressSave,
   type SaveStore,
 } from "./sudoku/save";
 
@@ -33,7 +34,7 @@ export default function App({
   difficulty: initialDifficulty = "easy",
 }: AppProps) {
   const store = saveStore === undefined ? defaultSaveStore() : saveStore;
-  const canContinue = hasInProgressSave(store);
+  const [canContinue, setCanContinue] = useState(() => hasInProgressSave(store));
   const [screen, setScreen] = useState<Screen>(initialScreen);
   const [game, setGame] = useState<SudokuGame | null>(() => {
     if (initialScreen !== "play") return null;
@@ -79,7 +80,16 @@ export default function App({
             onBack={() => setScreen("menu")}
           />
         ) : null}
-        {screen === "play" && game ? <PlayField game={game} onMenu={() => setScreen("menu")} /> : null}
+        {screen === "play" && game ? (
+          <PlayField
+            game={game}
+            onMenu={() => {
+              writeInProgressSave(store, game);
+              setCanContinue(hasInProgressSave(store));
+              setScreen("menu");
+            }}
+          />
+        ) : null}
         {screen === "settings" ? (
           <StubScreen
             title="Settings"

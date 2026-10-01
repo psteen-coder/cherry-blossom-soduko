@@ -30,3 +30,19 @@ export function hasInProgressSave(
     return false;
   }
 }
+
+export function writeInProgressSave(
+  store: SaveStore | null,
+  game: { difficulty: string; seed: number; elapsedSeconds(): number },
+): void {
+  if (!store) return;
+  store.setItem(
+    SAVE_KEY,
+    JSON.stringify({
+      status: "playing",
+      difficulty: game.difficulty,
+      seed: game.seed,
+      elapsedSeconds: game.elapsedSeconds(),
+    }),
+  );
+}
