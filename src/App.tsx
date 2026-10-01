@@ -2,6 +2,7 @@ import { useState } from "react";
 import BlossomBorder from "./components/BlossomBorder";
 import MainMenu, { DifficultyPicker } from "./components/MainMenu";
 import PlayField from "./components/PlayField";
+import Settings from "./components/Settings";
 import {
   SudokuGame,
   type Difficulty,
@@ -14,6 +15,14 @@ import {
   restoreGame,
   type SaveStore,
 } from "./sudoku/save";
+import {
+  applyTheme,
+  defaultThemeStore,
+  readTheme,
+  writeTheme,
+  type ThemeId,
+  type ThemeStore,
+} from "./sudoku/theme";
 
 export type Screen =
   | "menu"
@@ -24,6 +33,7 @@ export type Screen =
 
 export type AppProps = {
   saveStore?: SaveStore | null;
+  themeStore?: ThemeStore | null;
   screen?: Screen;
   seed?: number;
   difficulty?: Difficulty;
@@ -31,11 +41,18 @@ export type AppProps = {
 
 export default function App({
   saveStore,
+  themeStore,
   screen: initialScreen = "menu",
   seed,
   difficulty: initialDifficulty = "easy",
 }: AppProps) {
   const store = saveStore === undefined ? defaultSaveStore() : saveStore;
+  const tStore = themeStore === undefined ? defaultThemeStore() : themeStore;
+  const [theme, setTheme] = useState<ThemeId>(() => {
+    const id = readTheme(tStore);
+    applyTheme(id);
+    return id;
+  });
   const [canContinue, setCanContinue] = useState(() => hasInProgressSave(store));
   const [screen, setScreen] = useState<Screen>(initialScreen);
   const [game, setGame] = useState<SudokuGame | null>(() => {
@@ -110,10 +127,13 @@ export default function App({
           />
         ) : null}
         {screen === "settings" ? (
-          <StubScreen
-            title="Settings"
-            testId="settings-screen"
-            body="Six themes land in a later ticket."
+          <Settings
+            theme={theme}
+            onChoose={(id) => {
+              writeTheme(tStore, id);
+              applyTheme(id);
+              setTheme(id);
+            }}
             onBack={() => setScreen("menu")}
           />
         ) : null}

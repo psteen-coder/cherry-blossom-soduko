@@ -1,6 +1,8 @@
-:root {
+:root,
+[data-theme="dark"] {
   color-scheme: dark;
   --bg: #2a1520;
+  --glow: #6a3048;
   --petal: #f4b6c8;
   --ink: #fff6f8;
   --muted: #e8c4cf;
@@ -10,6 +12,141 @@
   --given: #f7d7e0;
   --grid: #c97a90;
   --box: #f4b6c8;
+  --board: #1e0e16;
+  --conflict: #6a2430;
+  --conflict-ink: #ffd0d6;
+  --pad-selected: #8a3d55;
+  --blossom-petal: #f6c1d0;
+  --blossom-petal-stroke: #e89aaa;
+  --blossom-center: #f8e3a8;
+  --blossom-center-stroke: #e6c56a;
+  --blossom-vine: #7a3b4e;
+  --blossom-vine-soft: #a85a72;
+}
+
+[data-theme="light"] {
+  color-scheme: light;
+  --bg: #f7f3ee;
+  --glow: #f0e4d8;
+  --petal: #b85a78;
+  --ink: #2a1c22;
+  --muted: #6b5560;
+  --btn: #fff8fb;
+  --btn-border: #d9a3b4;
+  --cell: #fffdfb;
+  --given: #4a2a36;
+  --grid: #d4b8c2;
+  --box: #b85a78;
+  --board: #efe4e8;
+  --conflict: #f5c4cc;
+  --conflict-ink: #7a1f2e;
+  --pad-selected: #f3d0dc;
+  --blossom-petal: #f4b6c8;
+  --blossom-petal-stroke: #d07a94;
+  --blossom-center: #f3d98a;
+  --blossom-center-stroke: #d4b05a;
+  --blossom-vine: #c48a9a;
+  --blossom-vine-soft: #e0b4c0;
+}
+
+[data-theme="sakura"] {
+  color-scheme: light;
+  --bg: #fbeaf0;
+  --glow: #f7cddc;
+  --petal: #d46a8c;
+  --ink: #5a2438;
+  --muted: #a05d74;
+  --btn: #fff0f5;
+  --btn-border: #e89aaa;
+  --cell: #fff7fa;
+  --given: #8a3d55;
+  --grid: #e8b4c4;
+  --box: #d46a8c;
+  --board: #f4d6e0;
+  --conflict: #f0a8b8;
+  --conflict-ink: #7a2438;
+  --pad-selected: #f4c4d4;
+  --blossom-petal: #f6c1d0;
+  --blossom-petal-stroke: #e89aaa;
+  --blossom-center: #f8e3a8;
+  --blossom-center-stroke: #e6c56a;
+  --blossom-vine: #d46a8c;
+  --blossom-vine-soft: #e89aaa;
+}
+
+[data-theme="sage"] {
+  color-scheme: light;
+  --bg: #eef3ea;
+  --glow: #d5e4cc;
+  --petal: #4f7a58;
+  --ink: #243028;
+  --muted: #5c7262;
+  --btn: #f5faf3;
+  --btn-border: #8fb392;
+  --cell: #f8fcf6;
+  --given: #2f4a36;
+  --grid: #b7cbb6;
+  --box: #4f7a58;
+  --board: #dde8d8;
+  --conflict: #d4c48a;
+  --conflict-ink: #5a3a10;
+  --pad-selected: #cfe0c8;
+  --blossom-petal: #c9e0c4;
+  --blossom-petal-stroke: #7aa87a;
+  --blossom-center: #f3e3a4;
+  --blossom-center-stroke: #c9b06a;
+  --blossom-vine: #6a8f6e;
+  --blossom-vine-soft: #9cbc9a;
+}
+
+[data-theme="lavender"] {
+  color-scheme: light;
+  --bg: #f1ecf8;
+  --glow: #ddd0f0;
+  --petal: #6b4ea3;
+  --ink: #2c2244;
+  --muted: #6d5f88;
+  --btn: #f7f3fc;
+  --btn-border: #b5a0d8;
+  --cell: #fbf8ff;
+  --given: #3f2d6a;
+  --grid: #cbbde4;
+  --box: #6b4ea3;
+  --board: #e4dcf2;
+  --conflict: #e0c4ec;
+  --conflict-ink: #5a246a;
+  --pad-selected: #ddd0f4;
+  --blossom-petal: #d8c8f0;
+  --blossom-petal-stroke: #a890d0;
+  --blossom-center: #f3e3a8;
+  --blossom-center-stroke: #d4b05a;
+  --blossom-vine: #8a70b8;
+  --blossom-vine-soft: #b5a0d8;
+}
+
+[data-theme="peach"] {
+  color-scheme: light;
+  --bg: #fbeee4;
+  --glow: #f5d4bc;
+  --petal: #c45c3a;
+  --ink: #3a2418;
+  --muted: #8a5e4a;
+  --btn: #fff6f0;
+  --btn-border: #e8a888;
+  --cell: #fffaf6;
+  --given: #7a3a24;
+  --grid: #e8c4b0;
+  --box: #c45c3a;
+  --board: #f4ddd0;
+  --conflict: #f0b8a8;
+  --conflict-ink: #7a2418;
+  --pad-selected: #f4d0bc;
+  --blossom-petal: #f4c4b0;
+  --blossom-petal-stroke: #e08a70;
+  --blossom-center: #f8e3a8;
+  --blossom-center-stroke: #e6c56a;
+  --blossom-vine: #d08060;
+  --blossom-vine-soft: #e8a888;
 }
 
 * {
@@ -27,7 +164,7 @@ body,
 body {
   font-family: "Segoe UI", system-ui, sans-serif;
   background:
-    radial-gradient(900px 420px at 50% -10%, #6a3048 0%, transparent 70%),
+    radial-gradient(900px 420px at 50% -10%, var(--glow) 0%, transparent 70%),
     var(--bg);
   color: var(--ink);
 }
@@ -144,6 +281,12 @@ h1 {
   opacity: 0.45;
 }
 
+.menu button.theme-selected,
+.menu button[aria-pressed="true"] {
+  box-shadow: inset 0 0 0 2px var(--petal);
+  font-weight: 650;
+}
+
 .play-bar {
   display: flex;
   align-items: center;
@@ -169,7 +312,7 @@ h1 {
   grid-template-columns: repeat(9, minmax(0, 1fr));
   grid-template-rows: repeat(9, minmax(0, 1fr));
   border: 3px solid var(--box);
-  background: #1e0e16;
+  background: var(--board);
 }
 
 .cell {
@@ -218,8 +361,8 @@ h1 {
 }
 
 .cell-conflict {
-  background: #6a2430;
-  color: #ffd0d6;
+  background: var(--conflict);
+  color: var(--conflict-ink);
 }
 
 .digit-pad {
@@ -239,7 +382,7 @@ h1 {
 
 .digit-pad button.pad-selected,
 .digit-pad button[aria-pressed="true"] {
-  background: #8a3d55;
+  background: var(--pad-selected);
   box-shadow: inset 0 0 0 2px var(--petal);
 }
 

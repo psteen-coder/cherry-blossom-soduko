@@ -16,13 +16,18 @@ function Bloom({ x, y, r, rotate }: Bloom) {
           cy={-r * 0.58}
           rx={r * 0.36}
           ry={r * 0.72}
-          fill="#f6c1d0"
-          stroke="#e89aaa"
+          fill="var(--blossom-petal)"
+          stroke="var(--blossom-petal-stroke)"
           strokeWidth={0.6}
           transform={`rotate(${angle})`}
         />
       ))}
-      <circle r={r * 0.2} fill="#f8e3a8" stroke="#e6c56a" strokeWidth={0.4} />
+      <circle
+        r={r * 0.2}
+        fill="var(--blossom-center)"
+        stroke="var(--blossom-center-stroke)"
+        strokeWidth={0.4}
+      />
     </g>
   );
 }
@@ -67,14 +72,14 @@ export default function BlossomBorder() {
         <path
           d="M0 54 C 40 10, 90 60, 140 28 S 220 8, 260 40 S 340 8, 400 36"
           fill="none"
-          stroke="#7a3b4e"
+          stroke="var(--blossom-vine)"
           strokeWidth="3"
           strokeLinecap="round"
         />
         <path
           d="M20 58 C 70 24, 110 50, 170 22 S 260 56, 320 26 S 370 50, 400 44"
           fill="none"
-          stroke="#a85a72"
+          stroke="var(--blossom-vine-soft)"
           strokeWidth="1.6"
         />
         {TOP_BLOOMS.map((bloom) => (
@@ -91,7 +96,7 @@ export default function BlossomBorder() {
         <path
           d="M0 18 C 50 50, 110 8, 170 40 S 250 8, 310 36 S 360 58, 400 22"
           fill="none"
-          stroke="#7a3b4e"
+          stroke="var(--blossom-vine)"
           strokeWidth="3"
           strokeLinecap="round"
         />
@@ -109,7 +114,7 @@ export default function BlossomBorder() {
         <path
           d="M48 0 C 12 60, 52 120, 20 180 S 54 260, 24 320 S 40 370, 50 400"
           fill="none"
-          stroke="#7a3b4e"
+          stroke="var(--blossom-vine)"
           strokeWidth="3"
           strokeLinecap="round"
         />
@@ -127,7 +132,7 @@ export default function BlossomBorder() {
         <path
           d="M16 0 C 52 70, 10 130, 44 190 S 8 270, 40 330 S 20 370, 14 400"
           fill="none"
-          stroke="#7a3b4e"
+          stroke="var(--blossom-vine)"
           strokeWidth="3"
           strokeLinecap="round"
         />

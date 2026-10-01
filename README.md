@@ -76,7 +76,7 @@ npm run build
 - Autosave key `cherry-blossom-soduko:save` on every place/clear; New Game or a win disables Continue until the next place
 - Play: select a digit 1–9 at the bottom, then tap a cell to place it
 - Difficulties: Easy 40 clues / Medium 30 / Hard 22 (unique solutions)
-- Themes: Dark, Light, Sakura, Sage, Lavender, Peach
+- Themes: Dark, Light, Sakura, Sage, Lavender, Peach — Settings applies immediately via `data-theme` on `:root` and persists as `cherry-blossom-soduko:theme`
 - Win: elapsed time over falling petals; petals glitter on a new high score
 
 ## Android APK (Windows)
