@@ -271,7 +271,8 @@ h1 {
 
 .menu button,
 .play-bar button,
-.digit-pad button {
+.digit-pad button,
+.win-return button {
   min-height: 56px;
   min-width: 44px;
   border-radius: 999px;
@@ -390,17 +391,79 @@ h1 {
   box-shadow: inset 0 0 0 2px var(--petal);
 }
 
-.name-prompt {
+.win-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: max(4.5rem, env(safe-area-inset-top))
+    max(1.5rem, env(safe-area-inset-right))
+    max(4.5rem, env(safe-area-inset-bottom))
+    max(1.5rem, env(safe-area-inset-left));
+  background: color-mix(in srgb, var(--bg) 55%, transparent);
+  overflow: hidden;
+}
+
+.win-petals {
   position: absolute;
-  inset: 3.5rem 0 0;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.falling-petal {
+  position: absolute;
+  top: -12%;
+  color: var(--blossom-petal);
+  text-shadow: 0 0 6px var(--blossom-petal-stroke);
+  animation-name: petal-fall;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  will-change: transform, filter, opacity;
+}
+
+.win-overlay[data-glitter="true"] .falling-petal,
+.falling-petal.glitter {
+  animation-name: petal-fall, petal-glitter;
+}
+
+.win-overlay-time {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  font-size: clamp(2.6rem, 12vw, 4.4rem);
+  font-weight: 750;
+  letter-spacing: 0.04em;
+  color: var(--petal);
+  text-shadow: 0 2px 18px var(--bg);
+}
+
+.name-prompt {
+  position: relative;
+  z-index: 1;
+  inset: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  padding: 1rem;
+  padding: 1rem 1.15rem 1.15rem;
+  width: min(22rem, 100%);
   background: color-mix(in srgb, var(--bg) 88%, transparent);
+  border: 1px solid var(--btn-border);
   border-radius: 16px;
+  animation: win-prompt-in 0.45s ease 1.6s both;
+}
+
+.win-return {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  width: min(100%, 18rem);
 }
 
 .name-prompt-title,
@@ -492,6 +555,57 @@ h1 {
 
 .lb-time {
   color: var(--petal);
+}
+
+@keyframes petal-fall {
+  0% {
+    transform: translate3d(0, -8vh, 0) rotate(0deg);
+    opacity: 0;
+  }
+  8% {
+    opacity: 0.95;
+  }
+  100% {
+    transform: translate3d(18vw, 115vh, 0) rotate(420deg);
+    opacity: 0.55;
+  }
+}
+
+@keyframes petal-glitter {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 1px #fff8e8) brightness(1);
+  }
+  40% {
+    filter: drop-shadow(0 0 10px #fff4c8) brightness(1.55);
+  }
+  70% {
+    filter: drop-shadow(0 0 4px #ffe9a8) brightness(1.2);
+  }
+}
+
+@keyframes win-prompt-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .falling-petal,
+  .win-overlay[data-glitter="true"] .falling-petal,
+  .falling-petal.glitter,
+  .name-prompt {
+    animation: none;
+  }
+
+  .falling-petal {
+    opacity: 0.85;
+  }
 }
 
 @media (max-width: 420px) {

@@ -8,10 +8,12 @@ import {
   recordScore,
   type ScoreStore,
 } from "../sudoku/scores";
+import WinOverlay from "./WinOverlay";
 
 type Props = {
   game: SudokuGame;
   onMenu: () => void;
+  onLeaderboard?: () => void;
   onChange?: (game: SudokuGame) => void;
   scoreStore?: ScoreStore | null;
 };
@@ -19,6 +21,7 @@ type Props = {
 export default function PlayField({
   game,
   onMenu,
+  onLeaderboard,
   onChange,
   scoreStore,
 }: Props) {
@@ -126,50 +129,68 @@ export default function PlayField({
         </button>
       </div>
       {won ? (
-        <div className="name-prompt" data-testid="name-prompt">
-          <p className="name-prompt-title">You solved it</p>
-          {high ? (
-            <p className="name-prompt-high" data-testid="new-high-score">
-              New high score
-            </p>
-          ) : null}
-          <p className="name-prompt-time" data-testid="win-time">
-            {formatElapsed(game.elapsedSeconds())}
-          </p>
-          {saved ? (
-            <p className="tagline">Saved to the leaderboard.</p>
-          ) : (
-            <form
-              className="name-form"
-              onSubmit={(event) => {
-                event.preventDefault();
-                const trimmed = name.trim() || lastUsedName(store) || "Player";
-                recordScore(store, {
-                  name: trimmed,
-                  difficulty: game.difficulty,
-                  timeSeconds: game.elapsedSeconds(),
-                  at: Date.now(),
-                });
-                setName(trimmed);
-                setSaved(true);
-              }}
-            >
-              <label className="name-label" htmlFor="score-name">
-                Name
-              </label>
-              <input
-                id="score-name"
-                data-testid="score-name"
-                value={name}
-                autoComplete="nickname"
-                onChange={(event) => setName(event.target.value)}
-              />
-              <button type="submit" data-testid="score-save">
-                Save
-              </button>
-            </form>
-          )}
-        </div>
+        <WinOverlay
+          timeLabel={formatElapsed(game.elapsedSeconds())}
+          glitter={high}
+        >
+          <div className="name-prompt" data-testid="name-prompt">
+            <p className="name-prompt-title">You solved it</p>
+            {high ? (
+              <p className="name-prompt-high" data-testid="new-high-score">
+                New high score
+              </p>
+            ) : null}
+            {saved ? (
+              <>
+                <p className="tagline">Saved to the leaderboard.</p>
+                <div className="win-return">
+                  <button type="button" data-testid="win-menu" onClick={onMenu}>
+                    Menu
+                  </button>
+                  {onLeaderboard ? (
+                    <button
+                      type="button"
+                      data-testid="win-leaderboard"
+                      onClick={onLeaderboard}
+                    >
+                      Leaderboard
+                    </button>
+                  ) : null}
+                </div>
+              </>
+            ) : (
+              <form
+                className="name-form"
+                onSubmit={(event) => {
+                  event.preventDefault();
+                  const trimmed = name.trim() || lastUsedName(store) || "Player";
+                  recordScore(store, {
+                    name: trimmed,
+                    difficulty: game.difficulty,
+                    timeSeconds: game.elapsedSeconds(),
+                    at: Date.now(),
+                  });
+                  setName(trimmed);
+                  setSaved(true);
+                }}
+              >
+                <label className="name-label" htmlFor="score-name">
+                  Name
+                </label>
+                <input
+                  id="score-name"
+                  data-testid="score-name"
+                  value={name}
+                  autoComplete="nickname"
+                  onChange={(event) => setName(event.target.value)}
+                />
+                <button type="submit" data-testid="score-save">
+                  Save
+                </button>
+              </form>
+            )}
+          </div>
+        </WinOverlay>
       ) : null}
     </section>
   );

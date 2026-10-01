@@ -133,6 +133,10 @@ export default function App({
               refreshContinue();
               setScreen("menu");
             }}
+            onLeaderboard={() => {
+              refreshContinue();
+              setScreen("leaderboard");
+            }}
           />
         ) : null}
         {screen === "settings" ? (
