@@ -43,7 +43,7 @@ Vite + React + TypeScript. Capacitor Android later (`org.cherryblossomsoduko.gam
    cd "$env:USERPROFILE\Downloads\cherry-blossom-soduko-main\cherry-blossom-soduko"
    ```
 
-3. Run kernel tests then the production build:
+3. Run Vitest, the production build, then Playwright:
 
    ```powershell
    powershell -ExecutionPolicy Bypass -File .\scripts\run-tests.ps1
@@ -53,19 +53,23 @@ Vite + React + TypeScript. Capacitor Android later (`org.cherryblossomsoduko.gam
 
    ```powershell
    npm install
+   npx playwright install chromium
    npm test
    npm run build
+   npm run test:e2e
    ```
 
-`npm test` is Vitest (Sudoku kernel). The built `dist/index.html` title must be **Cherry Blossom Soduko**, not Vite.
+`npm test` is Vitest (kernel generate/place/complete/difficulties, save, scores, high-score). `npm run test:e2e` is Playwright (menu + blossom borders, New Game Easy, digit-then-cell, Continue restore, six themes, win overlay + time, glitter on high score, leaderboard name). The built `dist/index.html` title must be **Cherry Blossom Soduko**, not Vite.
 
 ## Linux / macOS tests
 
 ```bash
 cd /path/to/cherry-blossom-soduko
 npm install
+npx playwright install chromium
 npm test
 npm run build
+npm run test:e2e
 ```
 
 ## Product

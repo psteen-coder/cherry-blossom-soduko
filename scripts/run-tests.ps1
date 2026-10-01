@@ -1,4 +1,5 @@
-# Build Cherry Blossom Soduko from repo root (folder that contains package.json).
+# Run Cherry Blossom Soduko Vitest + build + Playwright from repo root
+# (folder that contains package.json).
 # Usage from repo root:
 #   powershell -ExecutionPolicy Bypass -File .\scripts\run-tests.ps1
 
@@ -13,6 +14,9 @@ if (-not (Test-Path "node_modules")) {
   Write-Host "Installing npm dependencies..."
   npm install
 }
+
+Write-Host "Installing Playwright Chromium (safe to re-run)..."
+npx playwright install chromium
 
 Write-Host "npm test"
 npm test
@@ -30,4 +34,8 @@ if ($index -match "<title>[^<]*Vite") {
   Write-Error "Built index still has a Vite starter title."
 }
 
-Write-Host "Build green. Title is Cherry Blossom Soduko."
+Write-Host "npm run test:e2e"
+npm run test:e2e
+if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+Write-Host "All tests green. Title is Cherry Blossom Soduko."

@@ -50,8 +50,7 @@ test("seeded win records typed name; reload keeps the row; faster time is high s
   await page.waitForTimeout(1100);
   await page.getByTestId("score-name").fill("Pat");
   await page.getByTestId("score-save").click();
-  await page.getByTestId("play-menu").click();
-  await page.getByTestId("leaderboard").click();
+  await page.getByTestId("win-leaderboard").click();
   await expect(page.getByTestId("leaderboard-screen")).toBeVisible();
   await expect(page.getByTestId("score-easy-0")).toContainText("Pat");
 

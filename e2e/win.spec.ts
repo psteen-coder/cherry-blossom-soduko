@@ -62,7 +62,7 @@ test("seeded complete shows overlay with elapsed time, petals, and glitter", asy
 test("slower-than-best win does not glitter", async ({ page }) => {
   const game = SudokuGame.generate("easy", 11);
   const last = lastEmpty(game);
-  const snap = game.snapshot();
+  const snap = { ...game.snapshot(), elapsedSeconds: 120 };
 
   await page.goto("/");
   await page.evaluate(
